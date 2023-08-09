@@ -16,10 +16,14 @@ int minKey(int key[], bool mstSet[], int n) {
 
 void printMST(int parent[], int graph[V][V], int n) {
     printf("Edge \tWeight\n");
+    int totalWeight = 0; 
     for (int i = 1; i < n; i++) {
         printf("%d - %d \t%d\n", parent[i], i, graph[i][parent[i]]);
+        totalWeight += graph[i][parent[i]]; 
     }
+    printf("Total Spanning Tree Weight: %d\n", totalWeight); 
 }
+
 
 void primMST(int graph[V][V], int n) {
     int parent[V];
@@ -58,4 +62,3 @@ int main() {
     primMST(graph, n);
     return 0;
 }
-
