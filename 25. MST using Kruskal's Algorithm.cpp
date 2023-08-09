@@ -3,12 +3,10 @@
 struct Edge {
     int source, destination, weight;
 };
-
 struct Graph {
     int V, E;
     struct Edge* edge;
 };
-
 struct Graph* createGraph(int V, int E) {
     struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
     graph->V = V;
@@ -16,7 +14,6 @@ struct Graph* createGraph(int V, int E) {
     graph->edge = (struct Edge*)malloc(E * sizeof(struct Edge));
     return graph;
 }
-
 void sortEdges(struct Graph* graph) {
     for (int i = 0; i < graph->E - 1; i++) {
         for (int j = 0; j < graph->E - i - 1; j++) {
@@ -41,7 +38,7 @@ void unionSets(int parent[], int x, int y) {
     parent[xset] = yset;
 }
 
-void kruskalMST(struct Graph* graph) {
+int kruskalMST(struct Graph* graph) {
     int V = graph->V;
     struct Edge result[V];
     int parent[V];
@@ -50,12 +47,14 @@ void kruskalMST(struct Graph* graph) {
     sortEdges(graph);
     int edgeCount = 0;
     int i = 0;
+    int totalSpanningWeight = 0;
     while (edgeCount < V - 1 && i < graph->E) {
         struct Edge nextEdge = graph->edge[i++];
         int x = findParent(parent, nextEdge.source);
         int y = findParent(parent, nextEdge.destination);
         if (x != y) {
             result[edgeCount++] = nextEdge;
+            totalSpanningWeight += nextEdge.weight;
             unionSets(parent, x, y);
         }
     }
@@ -63,6 +62,7 @@ void kruskalMST(struct Graph* graph) {
     for (int i = 0; i < edgeCount; i++) {
         printf("%d -- %d, Weight: %d\n", result[i].source, result[i].destination, result[i].weight);
     }
+    return totalSpanningWeight;
 }
 
 int main() {
@@ -76,6 +76,7 @@ int main() {
     for (int i = 0; i < E; i++) {
         scanf("%d %d %d", &graph->edge[i].source, &graph->edge[i].destination, &graph->edge[i].weight);
     }
-    kruskalMST(graph);
+    int totalSpanningWeight = kruskalMST(graph);
+    printf("Total Spanning Weight: %d\n", totalSpanningWeight);
     return 0;
 }
